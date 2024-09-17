@@ -1,22 +1,8 @@
 <?php 
 
-checkIfuserIsNotLoggedIn();
-
-  // check if the user is admin or not
-  checkIfIsNotAdmin();
-  
-  // 1. connect to the database
-  $database = connectToDB();
-  
-  // 2. get all the users
-  // 2.1
-  $sql = "SELECT * FROM posts";
-  // 2.2
-  $query = $database->prepare( $sql );
-  // 2.3
-  $query->execute();
-  // 2.4
-  $users = $query->fetchAll();
+  // check if whoever that viewing this page is logged in.
+  // if not logged in, you want to redirect back to login page
+  checkIfuserIsNotLoggedIn();
 
 require "parts/header.php"; ?>
 <div class="container mx-auto my-5" style="max-width: 700px;">
@@ -39,124 +25,32 @@ require "parts/header.php"; ?>
             </tr>
           </thead>
           <tbody>
-           
             <tr>
-              <th scope="row">5</th>
-              <td>Post 5</td>
-              <td><span class="badge bg-warning">Pending Review</span></td>
-              <td class="text-end">
-                <div class="buttons">
-                  <a
-                    href="/post.php?id=>"
-                    target="_blank"
-                    class="btn btn-primary btn-sm me-2 disabled"
-                    ><i class="bi bi-eye"></i
-                  ></a>
-                  <a
-                    href="manage-posts-edit.php?id="
-                    class="btn btn-secondary btn-sm me-2"
-                    ><i class="bi bi-pencil"></i
-                  ></a>
-                  <a href="/#" class="btn btn-danger btn-sm"
-                    ><i class="bi bi-trash"></i
-                  ></a>
-                </div>
-              </td>
-             
-            </tr>
-            <tr>
-              <th scope="row">4</th>
-              <td>Post 4</td>
-              <td><span class="badge bg-success">Publish</span></td>
-              <td class="text-end">
-                <div class="buttons">
-                  <a
-                    href="/post"
-                    target="_blank"
-                    class="btn btn-primary btn-sm me-2"
-                    ><i class="bi bi-eye"></i
-                  ></a>
-                  <a
-                    href="manage-posts-edit"
-                    class="btn btn-secondary btn-sm me-2"
-                    ><i class="bi bi-pencil"></i
-                  ></a>
-                  <a href="/#" class="btn btn-danger btn-sm"
-                    ><i class="bi bi-trash"></i
-                  ></a>
+              <? foreach ($posts as $post): ?>
+                <th scope="row"><?=($post['id']); ?></th>
+                    <td><?= ($post['title']); ?></td>
+                    <td>
+                        <?php if ($post['status'] === 'Publish'): ?>
+                        <span class="badge bg-success">Publish</span>
+                        <?php else: ?>
+                        <span class="badge bg-warning"><?= ($post['status']); ?></span>
+                        <?php endif; ?>
+                    </td>
+                    <td class="text-end">
+                        <div class="buttons">
+                            <a href="/post?id=<?= ($post['id']); ?>" target="_blank" class="btn btn-primary btn-sm me-2">
+                                <i class="bi bi-eye"></i>
+                            </a>
+                            <a href="/manage-posts-edit?id=<?= ($post['id']); ?>" class="btn btn-secondary btn-sm me-2">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                            <a href="/delete-post?id=<?= ($post['id']); ?>" class="btn btn-danger btn-sm">
+                                <i class="bi bi-trash"></i>
+                            </a>
                 </div>
               </td>
             </tr>
-            <tr>
-              <th scope="row">3</th>
-              <td>Post 3</td>
-              <td><span class="badge bg-success">Publish</span></td>
-              <td class="text-end">
-                <div class="buttons">
-                  <a
-                    href="/post"
-                    target="_blank"
-                    class="btn btn-primary btn-sm me-2"
-                    ><i class="bi bi-eye"></i
-                  ></a>
-                  <a
-                    href="manage-posts-edit"
-                    class="btn btn-secondary btn-sm me-2"
-                    ><i class="bi bi-pencil"></i
-                  ></a>
-                  <a href="/#" class="btn btn-danger btn-sm"
-                    ><i class="bi bi-trash"></i
-                  ></a>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <th scope="row">2</th>
-              <td>Post 2</td>
-              <td><span class="badge bg-success">Publish</span></td>
-              <td class="text-end">
-                <div class="buttons">
-                  <a
-                    href="/post"
-                    target="_blank"
-                    class="btn btn-primary btn-sm me-2"
-                    ><i class="bi bi-eye"></i
-                  ></a>
-                  <a
-                    href="manage-posts-edit"
-                    class="btn btn-secondary btn-sm me-2"
-                    ><i class="bi bi-pencil"></i
-                  ></a>
-                  <a href="/#" class="btn btn-danger btn-sm"
-                    ><i class="bi bi-trash"></i
-                  ></a>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <th scope="row">1</th>
-              <td>Post 1</td>
-              <td><span class="badge bg-success">Publish</span></td>
-              <td class="text-end">
-                <div class="buttons">
-                  <a
-                    href="/post.php?id=>"
-                    target="_blank"
-                    class="btn btn-primary btn-sm me-2"
-                    ><i class="bi bi-eye"></i
-                  ></a>
-                  <a
-                    href="manage-posts-edit.php?id="
-                    class="btn btn-secondary btn-sm me-2"
-                    ><i class="bi bi-pencil"></i
-                  ></a>
-                  <a href="/#" class="btn btn-danger btn-sm"
-                    ><i class="bi bi-trash"></i
-                  ></a>
-                </div>
-              </td>
-            </tr>
-          
+            <?php endforeach;  ?>
           </tbody>
         </table>
       </div>
